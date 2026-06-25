@@ -6,10 +6,6 @@ import { FaPlus } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { HiArrowNarrowUp } from "react-icons/hi";
 import Microphone from "./microphone";
-<<<<<<< HEAD
-=======
-import { askGemini } from "../../config/geminiApi";
->>>>>>> 9f5f561 (integrated gemini api key)
 
 export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [showLogin, setShowLogin] = useState(false);
