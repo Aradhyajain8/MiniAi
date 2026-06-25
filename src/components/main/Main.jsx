@@ -3,9 +3,9 @@ import Login from "../login/signup/login";
 import classes from "./Main.module.css";
 import Signup from "../login/signup/signup";
 import { FaPlus } from "react-icons/fa6";
-import { IoMicOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { HiArrowNarrowUp } from "react-icons/hi";
+import Microphone from "./microphone";
 
 export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [showLogin, setShowLogin] = useState(false);
@@ -15,6 +15,8 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [prompt, setPrompt] = useState("");
+
+  const [isListening, setIsListening] = useState(false);
 
   const textAreaRef = useRef(null);
 
@@ -115,7 +117,7 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
             <textarea
               ref={textAreaRef}
               className={classes.userInput}
-              placeholder="Ask MiniAi"
+              placeholder={isListening ? "Listening..." :"Ask MiniAi"}
               onClick={() => setMenuCollapse(false)}
               value={prompt}
               onChange={handleInput}
@@ -127,7 +129,14 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
               ref={fileInputRef}
               onChange={handleFileUpload}
             />
-            <IoMicOutline className={classes.mic} />
+            <Microphone
+              className={classes.mic}
+              setPrompt={setPrompt}
+              textAreaRef={textAreaRef}
+              prompt={prompt}
+              isListening={isListening}
+              setIsListening={setIsListening}
+            />
             {(prompt || selectedFile) && (
               <button className={classes.sendButton}>
                 <HiArrowNarrowUp />
