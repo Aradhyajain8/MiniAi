@@ -6,6 +6,10 @@ import { FaPlus } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { HiArrowNarrowUp } from "react-icons/hi";
 import Microphone from "./microphone";
+<<<<<<< HEAD
+=======
+import { askGemini } from "../../config/geminiApi";
+>>>>>>> 9f5f561 (integrated gemini api key)
 
 export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [showLogin, setShowLogin] = useState(false);
@@ -60,6 +64,18 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
     // console.log(JSON.stringify(e.target.value));
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
+  async function handleSend() {
+    if (!prompt.trim()) return;
+
+    try {
+      const response = await askGemini(prompt);
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -138,7 +154,7 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
               setIsListening={setIsListening}
             />
             {(prompt || selectedFile) && (
-              <button className={classes.sendButton}>
+              <button className={classes.sendButton} onClick={handleSend}>
                 <HiArrowNarrowUp />
               </button>
             )}
