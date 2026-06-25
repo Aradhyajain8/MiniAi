@@ -1,0 +1,99 @@
+.backdrop{
+    background: rgba(0, 0, 0, 0.25);
+    inset: 0;
+    backdrop-filter: blur(6px);
+    /* border: 1px solid black; */
+    height: 100vh;
+    z-index: 100;
+    position: fixed;
+}
+
+.signupDiv{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    height: 32rem;
+    width: 23rem;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 2rem;
+    z-index: 101;
+    gap: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 1rem;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.field{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+
+input{
+    outline: none;
+    padding: .5rem;
+    border-radius: 1.5rem;
+    border-color: black;
+    font-size: 1rem;
+    width: 15rem;
+}
+
+.signupButton{
+    cursor: pointer;
+    padding: .5rem;
+    border-radius: 2rem;
+    width: 7rem;
+    font-size: 1.2rem;
+    margin: 0 auto;
+    background-color: rgb(14, 14, 124);
+    color: white;
+    border-style: none;
+}
+
+.signupButton:hover{
+    background-color:rgb(19, 19, 148) ;
+}
+
+.p{
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.p:hover{
+    text-decoration: underline;
+}
+
+.action{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.erroMsg{
+    color: red;
+    /* border: 1px solid black; */
+}
+
+.verification{
+    color: blue;
+}
+
+.haveAcc:hover{
+    color: blue;
+}
+
+.verifyModal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
+
+.verifyButton{
+    width: 10rem;
+}

@@ -1,0 +1,133 @@
+.sidebar{
+    /* border: 1px solid black; */
+    /* height: 100vh; */
+    background-color: #f0f4f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+    align-items: stretch;
+    width:70px;
+    transition: width .3s;
+}
+
+.open{
+    width:220px;
+}
+
+.top{
+    /* border: 1px solid black; */
+    display: inline-flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.icon{
+    font-size: 2rem;
+    text-align: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.newChat{
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3rem;
+    background-color: #e6eaf1;
+    padding: .5rem;
+    color: grey;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.recent{
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    font-size: 1.1rem;
+}
+
+.recentEntry{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+    font-size: 1.1rem;
+    color: #282828;
+    cursor: pointer;
+    border-radius: 3rem;
+    padding: 1rem;
+    transition: .3s ease-in-out;
+ 
+}
+
+.recentEntryOpen{
+    justify-content: flex-start;
+    padding: .75rem;
+    gap: .8rem;
+}
+
+.recentEntry:hover{
+    background-color: #e6eaf1;
+    color: #4c4b4b;
+}
+
+.recentEntry .icon{
+    font-size: 1.5rem;
+}
+
+.recentEntry p{
+    flex: 1;
+}
+
+
+.bottomItems{
+    padding: .6rem 0rem ;
+    padding-left: .3rem;
+    justify-content: start;
+
+}
+
+@media (max-width: 450px){
+    .open{
+        width: 280px;
+    }
+}
+
+@media screen and (max-width: 500px){
+    .sidebar{
+        padding: .7rem;
+        /* width: 40%; */
+    }
+
+    /* .open{
+        width: 30%;
+    } */
+
+    /* .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+    } */
+
+    .icon{
+        font-size: 1rem;
+    }
+
+    .recentIcon{
+        font-size: 1.4rem;
+    }
+
+    .menu{
+        font-size: 1.5rem;
+    }
+
+    .plus{
+        font-size: .7rem;
+    }
+}
