@@ -28,11 +28,11 @@ export default function Microphone(props) {
 
       // results is an array which stores all speech recognistion result
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        console.log(event.results[i].isFinal);
+        // console.log(event.results[i].isFinal);
         transcript += event.results[i][0].transcript;
       }
 
-      console.log("Transcript:", transcript);
+    //   console.log("Transcript:", transcript);
 
       props.setPrompt((prev) => prev + transcript);
       const textArea = props.textAreaRef.current;

@@ -6,6 +6,8 @@ import { FaPlus } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { HiArrowNarrowUp } from "react-icons/hi";
 import Microphone from "./microphone";
+import Chat from "./chat";
+import { askGemini } from "../../config/geminiApi";
 
 export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [showLogin, setShowLogin] = useState(false);
@@ -17,6 +19,9 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [prompt, setPrompt] = useState("");
 
   const [isListening, setIsListening] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const textAreaRef = useRef(null);
 
@@ -65,12 +70,50 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   async function handleSend() {
     if (!prompt.trim()) return;
 
-    try {
-      const response = await askGemini(prompt);
+    const userPrompt = prompt;
+    setPrompt("");
 
-      console.log(response);
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "2rem"; // or "auto"
+    }
+
+    console.log("user prompt ", userPrompt);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "user",
+        text: userPrompt,
+      },
+    ]);
+
+    setIsLoading(true);
+
+    try {
+      const response = await askGemini(userPrompt);
+
+      console.log("assistant response ", response);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text: response,
+        },
+      ]);
+
+      console.log("messages ", messages);
     } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text: "⚠️ Rate limit exceeded. Please wait a few seconds and try again.",
+        },
+      ]);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -106,55 +149,60 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
       )}
 
       <div className={classes.mainContainer}>
-        <div className={classes.greet}>
-          <p>
-            <span>Hello {user && user.displayName.split(" ")[0]}! </span>
-          </p>
-          <h1>How can i help you today?</h1>
-        </div>
-
-        <div className={classes.searchBar}>
-          {selectedFile && (
-            <div className={classes.fileChip}>
-              <span className={classes.fileName}>{selectedFile.name}</span>
-              <RxCross2
-                className={classes.cross}
-                onClick={() => setSelectedFile(null)}
-              />
+        <div className={classes.chatContainer}>
+          {messages.length === 0 ? (
+            <div className={classes.greet}>
+              <p>
+                <span>Hello {user && user.displayName.split(" ")[0]}! </span>
+              </p>
+              <h1>How can i help you today?</h1>
             </div>
+          ) : (
+            <Chat messages={messages} isLoading={isLoading} />
           )}
-
-          <div className={classes.inputRow}>
-            <FaPlus className={classes.upload} onClick={openFilePicker} />
-            <textarea
-              ref={textAreaRef}
-              className={classes.userInput}
-              placeholder={isListening ? "Listening..." :"Ask MiniAi"}
-              onClick={() => setMenuCollapse(false)}
-              value={prompt}
-              onChange={handleInput}
-              rows={1}
+        </div>
+      </div>
+      <div className={classes.searchBar}>
+        {selectedFile && (
+          <div className={classes.fileChip}>
+            <span className={classes.fileName}>{selectedFile.name}</span>
+            <RxCross2
+              className={classes.cross}
+              onClick={() => setSelectedFile(null)}
             />
-            <input
-              className={classes.fileHanlder}
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-            />
-            <Microphone
-              className={classes.mic}
-              setPrompt={setPrompt}
-              textAreaRef={textAreaRef}
-              prompt={prompt}
-              isListening={isListening}
-              setIsListening={setIsListening}
-            />
-            {(prompt || selectedFile) && (
-              <button className={classes.sendButton} onClick={handleSend}>
-                <HiArrowNarrowUp />
-              </button>
-            )}
           </div>
+        )}
+
+        <div className={classes.inputRow}>
+          <FaPlus className={classes.upload} onClick={openFilePicker} />
+          <textarea
+            ref={textAreaRef}
+            className={classes.userInput}
+            placeholder={isListening ? "Listening..." : "Ask MiniAi"}
+            onClick={() => setMenuCollapse(false)}
+            value={prompt}
+            onChange={handleInput}
+            rows={1}
+          />
+          <input
+            className={classes.fileHanlder}
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+          />
+          <Microphone
+            className={classes.mic}
+            setPrompt={setPrompt}
+            textAreaRef={textAreaRef}
+            prompt={prompt}
+            isListening={isListening}
+            setIsListening={setIsListening}
+          />
+          {(prompt || selectedFile) && (
+            <button className={classes.sendButton} onClick={handleSend}>
+              <HiArrowNarrowUp />
+            </button>
+          )}
         </div>
       </div>
     </div>
