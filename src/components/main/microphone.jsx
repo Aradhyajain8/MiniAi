@@ -18,8 +18,12 @@ export default function Microphone(props) {
 
     recognition.current = new speechRecognition();
 
+    // listen continously
     recognition.current.continuous = true;
-    recognition.current.interimResults = false; //it writes while u r speaking but it is duplicating
+
+    //false - u will only receive end result
+    // true - if u spoke hello it will give temp results (h he hel.....)
+    recognition.current.interimResults = false;  
     recognition.current.lang = "en-US";
 
     // browser runs this func whenever speech is recognized

@@ -2,12 +2,9 @@ import { useRef, useState } from "react";
 import Login from "../login/signup/login";
 import classes from "./Main.module.css";
 import Signup from "../login/signup/signup";
-import { FaPlus } from "react-icons/fa6";
-import { RxCross2 } from "react-icons/rx";
-import { HiArrowNarrowUp } from "react-icons/hi";
-import Microphone from "./microphone";
 import Chat from "./chat";
 import { askGemini } from "../../config/geminiApi";
+import SearchBar from "./searchBar";
 
 export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [showLogin, setShowLogin] = useState(false);
@@ -24,8 +21,6 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const textAreaRef = useRef(null);
-
-  const fileInputRef = useRef(null);
 
   function openLogin() {
     setShowLogin(true);
@@ -45,27 +40,7 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
     setShowSignup(false);
   }
 
-  function handleFileUpload(e) {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    setSelectedFile(file);
-    console.log(file);
-  }
-
-  function openFilePicker() {
-    fileInputRef.current.click();
-  }
-
-  function handleInput(e) {
-    setPrompt(e.target.value);
-
-    const textarea = textAreaRef.current;
-    // console.log(JSON.stringify(e.target.value));
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }
+  
 
   async function handleSend() {
     if (!prompt.trim()) return;
@@ -162,49 +137,17 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
           )}
         </div>
       </div>
-      <div className={classes.searchBar}>
-        {selectedFile && (
-          <div className={classes.fileChip}>
-            <span className={classes.fileName}>{selectedFile.name}</span>
-            <RxCross2
-              className={classes.cross}
-              onClick={() => setSelectedFile(null)}
-            />
-          </div>
-        )}
-
-        <div className={classes.inputRow}>
-          <FaPlus className={classes.upload} onClick={openFilePicker} />
-          <textarea
-            ref={textAreaRef}
-            className={classes.userInput}
-            placeholder={isListening ? "Listening..." : "Ask MiniAi"}
-            onClick={() => setMenuCollapse(false)}
-            value={prompt}
-            onChange={handleInput}
-            rows={1}
-          />
-          <input
-            className={classes.fileHanlder}
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileUpload}
-          />
-          <Microphone
-            className={classes.mic}
-            setPrompt={setPrompt}
-            textAreaRef={textAreaRef}
-            prompt={prompt}
-            isListening={isListening}
-            setIsListening={setIsListening}
-          />
-          {(prompt || selectedFile) && (
-            <button className={classes.sendButton} onClick={handleSend}>
-              <HiArrowNarrowUp />
-            </button>
-          )}
-        </div>
-      </div>
+      <SearchBar
+        prompt={prompt}
+        setPrompt={setPrompt}
+        selectedFile={selectedFile}
+        setSelectedFile={setSelectedFile}
+        handleSend={handleSend}
+        isListening={isListening}
+        setIsListening={setIsListening}
+        textAreaRef={textAreaRef}
+        setMenuCollapse={setMenuCollapse}
+      />
     </div>
   );
 }
