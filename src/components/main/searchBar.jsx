@@ -40,6 +40,13 @@ export default function SearchBar({
     textarea.style.height = `${textarea.scrollHeight}px`;
   }
 
+  function handleKey(e) {
+    if (e.key === "Enter" && !e.key === "Shift") {
+      e.preventDefault();
+      handleSend();
+    }
+  }
+
   return (
     <div className={classes.searchBar}>
       {selectedFile && (
@@ -62,6 +69,7 @@ export default function SearchBar({
           value={prompt}
           onChange={handleInput}
           rows={1}
+          onKeyDown={handleKey}
         />
         <input
           className={classes.fileHanlder}

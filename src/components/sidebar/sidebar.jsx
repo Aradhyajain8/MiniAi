@@ -16,7 +16,6 @@ export default function SideBar({
   setMenuCollapse,
   chats,
   setChats,
-  currentChatId,
   setCurrentChatId,
 }) {
   function handleMenu() {
@@ -27,7 +26,7 @@ export default function SideBar({
     console.log("clicked");
     const newChat = {
       id: Date.now(),
-      title: "New Chat",
+      title: "",
       messages: [],
     };
 
@@ -42,7 +41,10 @@ export default function SideBar({
           className={`${classes.icon} ${classes.menu}`}
           onClick={handleMenu}
         />
-        <div className={classes.newChat} onClick={handleNewChat}>
+        <div
+          className={classes.newChat}
+          onClick={!menuCollapse ? handleNewChat : undefined}
+        >
           <FaPlus className={`${classes.icon} ${classes.plus}`} />
           {menuCollapse && <p>New Chat</p>}
         </div>
@@ -50,16 +52,22 @@ export default function SideBar({
         {menuCollapse && (
           <div className={classes.recent}>
             <p className={classes.recentTitle}>Recent</p>
-            <div
-              className={`${classes.recentEntry} ${
-                menuCollapse ? classes.recentEntryOpen : ""
-              }`}
-            >
-              <FaRegMessage
-                className={`${classes.icon} ${classes.recentIcon}`}
-              />
-              <p>Recent Chats</p>
-            </div>
+            {chats
+              .filter((chat) => chat.title !== "")
+              .map((chat) => (
+                <div
+                  key={chat.id}
+                  onClick={() => setCurrentChatId(chat.id)}
+                  className={`${classes.recentEntry} ${
+                    menuCollapse ? classes.recentEntryOpen : ""
+                  }`}
+                >
+                  <FaRegMessage
+                    className={`${classes.icon} ${classes.recentIcon}`}
+                  />
+                  <p>{chat.title || "New chat"}</p>
+                </div>
+              ))}
           </div>
         )}
       </div>
