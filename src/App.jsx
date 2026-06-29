@@ -12,6 +12,14 @@ export default function App() {
 
   const [menuCollapse, setMenuCollapse] = useState(false);
 
+  const [chats, setChats] = useState([{
+    id: Date.now(),
+    title: "",
+    messages: [],
+  }]);
+
+  const [currentChatId, setCurrentChatId] = useState(chats[0].id);
+
   useEffect(() => {
     const userCreated = onAuthStateChanged(auth, (currUser) => {
       setUser(currUser);
@@ -30,12 +38,19 @@ export default function App() {
         user={user}
         menuCollapse={menuCollapse}
         setMenuCollapse={setMenuCollapse}
+        chats={chats}
+        setChats={setChats}
+        currentChatId={currentChatId}
+        setCurrentChatId={setCurrentChatId}
       />
       <Main
         user={user}
         loading={loading}
         menuCollapse={menuCollapse}
         setMenuCollapse={setMenuCollapse}
+        chats={chats}
+        setChats={setChats}
+        currentChatId={currentChatId}
       />
     </div>
   );

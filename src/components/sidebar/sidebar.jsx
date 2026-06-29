@@ -14,10 +14,25 @@ export default function SideBar({
   user,
   menuCollapse,
   setMenuCollapse,
+  chats,
+  setChats,
+  currentChatId,
+  setCurrentChatId,
 }) {
-  
   function handleMenu() {
     setMenuCollapse((prev) => !prev);
+  }
+
+  function handleNewChat() {
+    console.log("clicked");
+    const newChat = {
+      id: Date.now(),
+      title: "New Chat",
+      messages: [],
+    };
+
+    setChats((prev) => [...prev, newChat]);
+    setCurrentChatId(newChat.id);
   }
 
   return (
@@ -27,7 +42,7 @@ export default function SideBar({
           className={`${classes.icon} ${classes.menu}`}
           onClick={handleMenu}
         />
-        <div className={classes.newChat}>
+        <div className={classes.newChat} onClick={handleNewChat}>
           <FaPlus className={`${classes.icon} ${classes.plus}`} />
           {menuCollapse && <p>New Chat</p>}
         </div>

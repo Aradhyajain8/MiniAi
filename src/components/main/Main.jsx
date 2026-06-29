@@ -6,7 +6,15 @@ import Chat from "./chat";
 import { askGemini } from "../../config/geminiApi";
 import SearchBar from "./searchBar";
 
-export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
+export default function Main({
+  user,
+  loading,
+  menuCollapse,
+  setMenuCollapse,
+  setChats,
+  chats,
+  currentChatId,
+}) {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
 
@@ -16,11 +24,12 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
   const [prompt, setPrompt] = useState("");
 
   const [isListening, setIsListening] = useState(false);
-  const [messages, setMessages] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const textAreaRef = useRef(null);
+
+  const currentChat = chats.find((chat) => chat.id === currentChatId);
 
   function openLogin() {
     setShowLogin(true);
@@ -40,8 +49,6 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
     setShowSignup(false);
   }
 
-  
-
   async function handleSend() {
     if (!prompt.trim()) return;
 
@@ -54,13 +61,19 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
 
     console.log("user prompt ", userPrompt);
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "user",
-        text: userPrompt,
-      },
-    ]);
+    setChats((prevChats) =>
+      prevChats.map((chat) => {
+        if (chat.id !== currentChatId) {
+          return chat;
+        }
+
+        return {
+          ...chat,
+          title: chat.title || userPrompt.slice(0, 30),
+          messages: [...chat.messages, { role: "user", text: userPrompt }],
+        };
+      }),
+    );
 
     setIsLoading(true);
 
@@ -69,23 +82,36 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
 
       console.log("assistant response ", response);
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: response,
-        },
-      ]);
+      setChats((prevChats) =>
+        prevChats.map((chat) => {
+          if (chat.id !== currentChatId) {
+            return chat;
+          }
 
-      console.log("messages ", messages);
+          return {
+            ...chat,
+            messages: [...chat.messages, { role: "assistant", text: response }],
+          };
+        }),
+      );
+
+      console.log("messages ", chats.messages);
     } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          text: "⚠️ Rate limit exceeded. Please wait a few seconds and try again.",
-        },
-      ]);
+      setChats((prevChats) =>
+        prevChats.map((chat) => {
+          if (chat.id !== currentChatId) {
+            return chat;
+          }
+
+          return {
+            ...chat,
+            messages: [
+              ...chat.messages,
+              { role: "assistant", text: "Gemini free quota exhausted! Sorry" },
+            ],
+          };
+        }),
+      );
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -125,7 +151,7 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
 
       <div className={classes.mainContainer}>
         <div className={classes.chatContainer}>
-          {messages.length === 0 ? (
+          {currentChat.messages.length === 0 ? (
             <div className={classes.greet}>
               <p>
                 <span>Hello {user && user.displayName.split(" ")[0]}! </span>
@@ -133,7 +159,7 @@ export default function Main({ user, loading, menuCollapse, setMenuCollapse }) {
               <h1>How can i help you today?</h1>
             </div>
           ) : (
-            <Chat messages={messages} isLoading={isLoading} />
+            <Chat messages={currentChat.messages} isLoading={isLoading} />
           )}
         </div>
       </div>
