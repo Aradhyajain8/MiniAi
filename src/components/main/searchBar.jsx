@@ -41,7 +41,7 @@ export default function SearchBar({
   }
 
   function handleKey(e) {
-    if (e.key === "Enter" && !e.key === "Shift") {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }

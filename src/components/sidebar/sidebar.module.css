@@ -83,6 +83,14 @@
     flex: 1;
 }
 
+.activeChat{
+    background-color: #e6eaf1;
+}
+
+/* .activeChat .icon{
+    color: black;
+} */
+
 
 .bottomItems{
     padding: .6rem 0rem ;

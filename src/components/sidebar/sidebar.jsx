@@ -6,7 +6,6 @@ import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { IoIosTimer } from "react-icons/io";
 import { FiSettings } from "react-icons/fi";
 import SidebarBottomItems from "./sidebar_bottom_items";
-import { useState } from "react";
 import { MdLogout } from "react-icons/md";
 
 export default function SideBar({
@@ -17,6 +16,7 @@ export default function SideBar({
   chats,
   setChats,
   setCurrentChatId,
+  currentChatId
 }) {
   function handleMenu() {
     setMenuCollapse((prev) => !prev);
@@ -43,7 +43,7 @@ export default function SideBar({
         />
         <div
           className={classes.newChat}
-          onClick={!menuCollapse ? handleNewChat : undefined}
+          onClick={handleNewChat}
         >
           <FaPlus className={`${classes.icon} ${classes.plus}`} />
           {menuCollapse && <p>New Chat</p>}
@@ -60,7 +60,7 @@ export default function SideBar({
                   onClick={() => setCurrentChatId(chat.id)}
                   className={`${classes.recentEntry} ${
                     menuCollapse ? classes.recentEntryOpen : ""
-                  }`}
+                  } ${currentChatId === chat.id ? classes.activeChat : ""}`}
                 >
                   <FaRegMessage
                     className={`${classes.icon} ${classes.recentIcon}`}
