@@ -2,7 +2,7 @@ export default function SidebarBottomItems(props) {
   return (
     <div
       className={props.className}
-      onClick={!props.menuCollapse ? props.onClick : undefined}
+      onClick={props.onClick}
     >
       {props.icon}
       {props.menuCollapse && <p>{props.text}</p>}

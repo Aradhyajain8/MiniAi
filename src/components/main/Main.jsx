@@ -5,6 +5,8 @@ import Signup from "../login/signup/signup";
 import Chat from "./chat";
 import { askGemini } from "../../config/geminiApi";
 import SearchBar from "./searchBar";
+import { round } from "firebase/firestore/pipelines";
+import { saveChat } from "../../services/chatServices";
 
 export default function Main({
   user,
@@ -30,6 +32,10 @@ export default function Main({
   const textAreaRef = useRef(null);
 
   const currentChat = chats.find((chat) => chat.id === currentChatId);
+  console.log({
+    loading,
+    user,
+  });
 
   function openLogin() {
     setShowLogin(true);
@@ -53,66 +59,82 @@ export default function Main({
     if (!prompt.trim()) return;
 
     const userPrompt = prompt;
+    const activeChatId = currentChatId;
+
     setPrompt("");
 
     if (textAreaRef.current) {
-      textAreaRef.current.style.height = "2rem"; // or "auto"
+      textAreaRef.current.style.height = "2rem";
     }
 
-    console.log("user prompt ", userPrompt);
+    setIsLoading(true);
 
     setChats((prevChats) =>
       prevChats.map((chat) => {
-        if (chat.id !== currentChatId) {
-          return chat;
-        }
+        if (chat.id !== activeChatId) return chat;
 
         return {
           ...chat,
           title: chat.title || userPrompt.slice(0, 30),
-          messages: [...chat.messages, { role: "user", text: userPrompt }],
+          messages: [
+            ...chat.messages,
+            {
+              role: "user",
+              text: userPrompt,
+            },
+          ],
         };
       }),
     );
 
-    setIsLoading(true);
-
     try {
       const response = await askGemini(userPrompt);
 
-      console.log("assistant response ", response);
-
+  
       setChats((prevChats) =>
         prevChats.map((chat) => {
-          if (chat.id !== currentChatId) {
-            return chat;
-          }
+          if (chat.id !== activeChatId) return chat;
 
-          return {
-            ...chat,
-            messages: [...chat.messages, { role: "assistant", text: response }],
-          };
-        }),
-      );
-
-      console.log("messages ", chats.messages);
-    } catch (error) {
-      setChats((prevChats) =>
-        prevChats.map((chat) => {
-          if (chat.id !== currentChatId) {
-            return chat;
-          }
-
-          return {
+          const updatedChat = {
             ...chat,
             messages: [
               ...chat.messages,
-              { role: "assistant", text: "Gemini free quota exhausted! Sorry" },
+              {
+                role: "assistant",
+                text: response,
+              },
             ],
           };
+
+     
+          saveChat(user.uid, updatedChat);
+
+          return updatedChat;
         }),
       );
+    } catch (error) {
       console.log(error);
+
+      setChats((prevChats) =>
+        prevChats.map((chat) => {
+          if (chat.id !== activeChatId) return chat;
+
+          const updatedChat = {
+            ...chat,
+            messages: [
+              ...chat.messages,
+              {
+                role: "assistant",
+                text: "Gemini free quota exhausted! Sorry",
+              },
+            ],
+          };
+
+          saveChat(user.uid, updatedChat);
+
+          return updatedChat;
+        }),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -151,7 +173,7 @@ export default function Main({
 
       <div className={classes.mainContainer}>
         <div className={classes.chatContainer}>
-          {currentChat.messages.length === 0 ? (
+          {loading ? null : currentChat.messages.length === 0 ? (
             <div className={classes.greet}>
               <p>
                 <span>Hello {user && user.displayName.split(" ")[0]}! </span>
