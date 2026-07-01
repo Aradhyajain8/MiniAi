@@ -1,0 +1,56 @@
+.faq{
+    /* border: 1px solid black; */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+    padding: 2rem;
+}
+
+.faq h1{
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+.backBtn{
+    /* width: 10%;
+    padding: 1rem;
+    border-radius: 2rem; */
+    cursor: pointer;
+    padding: .5rem;
+    border-radius: 2rem;
+    width: 25%;
+    font-size: 1.2rem;
+    margin: 0 auto;
+    background-color: rgb(14, 14, 124);
+    color: white;
+    border-style: none;
+}
+
+.backBtn:hover{
+    background-color:rgb(19, 19, 148) ;
+}
+
+@media screen and (max-width:600px) {
+    .faq h1{
+        font-size: 1.5rem;
+    }
+
+    .backBtn{
+        font-size: 1rem;
+    }
+    
+}
+
+@media screen and (max-width:450px){
+    .backBtn{
+        width: 40%;
+    }
+
+    .hideFaq{
+        display: none;
+    }
+}

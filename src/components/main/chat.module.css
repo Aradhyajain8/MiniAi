@@ -33,14 +33,28 @@
     list-style-position: inside;
 }
 
+
 @media screen and (max-width: 600px){
     .aiMessage{
-
+        max-width:85%;
         font-size: 1rem;
+        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
     }
 
     .userMessage{
+        max-width: 75%;
         font-size: 1rem;
     }
     
+}
+
+@media screen and (max-width: 400px) {
+    .aiMessage{
+        font-size: .8rem;
+    }
+
+    .userMessage{
+        font-size: .8rem;
+        }
 }

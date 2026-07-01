@@ -17,6 +17,8 @@ export default function SideBar({
   setChats,
   setCurrentChatId,
   currentChatId,
+  onClickHelp,
+  setActivePage,
 }) {
   function handleMenu() {
     setMenuCollapse((prev) => !prev);
@@ -55,14 +57,18 @@ export default function SideBar({
               .map((chat) => (
                 <div
                   key={chat.id}
-                  onClick={() => setCurrentChatId(chat.id)}
+                  onClick={() => {
+                    setCurrentChatId(chat.id);
+                    setActivePage("main");
+                    setMenuCollapse(false);
+                  }}
                   className={`${classes.recentEntry} ${
                     menuCollapse ? classes.recentEntryOpen : ""
                   } ${currentChatId === chat.id ? classes.activeChat : ""}`}
                 >
-                  <FaRegMessage
+                  {/* <FaRegMessage
                     className={`${classes.icon} ${classes.recentIcon}`}
-                  />
+                  /> */}
                   <p>{chat.title || "New chat"}</p>
                 </div>
               ))}
@@ -85,6 +91,7 @@ export default function SideBar({
           icon={<HiQuestionMarkCircle className={classes.icon} />}
           text="Help"
           menuCollapse={menuCollapse}
+          onClick={onClickHelp}
         />
 
         <SidebarBottomItems
